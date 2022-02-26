@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Ball.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/field_sprite.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 176.5, 10 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 7, 90 )
+
+[node name="Map" type="Node2D"]
+
+[node name="Area2D" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="Area2D"]
+texture = ExtResource( 3 )
+centered = false
+
+[node name="YSort" type="YSort" parent="."]
+
+[node name="Player" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 11, 72 )
+
+[node name="Player2" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 227, 72 )
+
+[node name="Ball" parent="." instance=ExtResource( 2 )]
+position = Vector2( 110, 65 )
+
+[node name="UpperCollider" type="StaticBody2D" parent="."]
+position = Vector2( -3, -10 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UpperCollider"]
+position = Vector2( 164.5, 0 )
+shape = SubResource( 1 )
+
+[node name="DownCollider" type="StaticBody2D" parent="."]
+position = Vector2( 1, 190 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DownCollider"]
+position = Vector2( 165, 0 )
+shape = SubResource( 1 )
+
+[node name="SideColliders" type="StaticBody2D" parent="."]
+position = Vector2( -8, 0 )
+
+[node name="LeftCollider" type="CollisionShape2D" parent="SideColliders"]
+position = Vector2( 1, 90 )
+shape = SubResource( 2 )
+
+[node name="RightCollider" type="CollisionShape2D" parent="SideColliders"]
+position = Vector2( 255, 90 )
+shape = SubResource( 2 )
