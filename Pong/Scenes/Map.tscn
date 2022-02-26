@@ -1,61 +1,90 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scenes/Ball/Ball.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/field_sprite.png" type="Texture" id=3]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 176.5, 10 )
+[ext_resource path="res://AiInputComponent.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/Map.gd" type="Script" id=5]
+[ext_resource path="res://Scenes/Player/RacketBotScript.gd" type="Script" id=6]
+[ext_resource path="res://Scenes/Field.gd" type="Script" id=7]
+[ext_resource path="res://Scenes/HUD.tscn" type="PackedScene" id=8]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 7, 90 )
 
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 135, 10 )
+
 [node name="Map" type="Node2D"]
+script = ExtResource( 5 )
 
-[node name="Area2D" type="Node2D" parent="."]
+[node name="Field" type="Node2D" parent="."]
+script = ExtResource( 7 )
 
-[node name="Sprite" type="Sprite" parent="Area2D"]
+[node name="Sprite" type="Sprite" parent="Field"]
 texture = ExtResource( 3 )
 centered = false
 
-[node name="YSort" type="YSort" parent="."]
+[node name="RightGoal" type="Area2D" parent="Field"]
+position = Vector2( -8, 0 )
+collision_layer = 2
+collision_mask = 2
 
-[node name="Player" parent="YSort" instance=ExtResource( 2 )]
-position = Vector2( 8, 85 )
+[node name="RightCollider" type="CollisionShape2D" parent="Field/RightGoal"]
+position = Vector2( 255, 90 )
+shape = SubResource( 2 )
 
-[node name="Player2" parent="YSort" instance=ExtResource( 2 )]
-position = Vector2( 232, 85 )
+[node name="LeftGoal" type="Area2D" parent="Field"]
+position = Vector2( -8, 0 )
+collision_layer = 2
+collision_mask = 2
 
-[node name="Ball" parent="YSort" instance=ExtResource( 1 )]
-position = Vector2( 120, 80 )
+[node name="LeftCollider" type="CollisionShape2D" parent="Field/LeftGoal"]
+position = Vector2( 1, 90 )
+shape = SubResource( 2 )
 
-[node name="UpperCollider" type="StaticBody2D" parent="."]
+[node name="UpperCollider" type="StaticBody2D" parent="Field"]
 position = Vector2( -3, -10 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UpperCollider"]
-position = Vector2( 164.5, 0 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Field/UpperCollider"]
+position = Vector2( 123, 0 )
 shape = SubResource( 1 )
 
-[node name="DownCollider" type="StaticBody2D" parent="."]
-position = Vector2( 1, 190 )
+[node name="DownCollider" type="StaticBody2D" parent="Field"]
+position = Vector2( -45, 190 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DownCollider"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Field/DownCollider"]
 position = Vector2( 165, 0 )
 shape = SubResource( 1 )
 
-[node name="SideColliders" type="StaticBody2D" parent="."]
-position = Vector2( -8, 0 )
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 8, 85 )
 
-[node name="LeftCollider" type="CollisionShape2D" parent="SideColliders"]
-position = Vector2( 1, 90 )
-shape = SubResource( 2 )
+[node name="Player2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 232, 85 )
+script = ExtResource( 6 )
 
-[node name="RightCollider" type="CollisionShape2D" parent="SideColliders"]
-position = Vector2( 255, 90 )
-shape = SubResource( 2 )
+[node name="AiInputComponent" type="Node" parent="Player2"]
+script = ExtResource( 4 )
+ball_path = NodePath("../../Ball")
+
+[node name="Ball" parent="." instance=ExtResource( 1 )]
+position = Vector2( 120, 80 )
+
+[node name="HUD" parent="." instance=ExtResource( 8 )]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="goal_left" from="Field" to="." method="_on_Field_goal_left"]
+[connection signal="goal_right" from="Field" to="." method="_on_Field_goal_right"]
+[connection signal="body_entered" from="Field/RightGoal" to="Field" method="_on_RightGoal_body_entered"]
+[connection signal="body_entered" from="Field/LeftGoal" to="Field" method="_on_LeftGoal_body_entered"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]

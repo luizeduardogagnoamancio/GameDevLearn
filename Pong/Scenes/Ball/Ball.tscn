@@ -1,14 +1,17 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/ball.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Ball/Ball.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Ball/PongWall.wav" type="AudioStream" id=3]
 [ext_resource path="res://Scenes/Ball/PongRacket.wav" type="AudioStream" id=4]
+[ext_resource path="res://Scenes/Ball/RacketSound.gd" type="Script" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 5.0
 
 [node name="Ball" type="KinematicBody2D"]
+collision_layer = 3
+collision_mask = 2
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -19,6 +22,8 @@ shape = SubResource( 1 )
 
 [node name="RacketSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 4 )
+script = ExtResource( 5 )
 
 [node name="WallSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
+script = ExtResource( 5 )

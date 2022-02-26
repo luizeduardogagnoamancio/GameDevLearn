@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node",
+"class": "AiInputComponent",
+"language": "GDScript",
+"path": "res://AiInputComponent.gd"
+} ]
+_global_script_class_icons={
+"AiInputComponent": ""
+}
+
 [application]
 
 config/name="Pong"

@@ -11,7 +11,6 @@ var direction = Vector2()
 
 func _ready():
 	randomize()
-	set_start_direction()
 
 
 func set_start_direction():
