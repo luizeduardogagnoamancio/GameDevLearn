@@ -4,7 +4,7 @@ onready var hud = get_node("HUD")
 var score_player_one = 0
 var score_player_two = 0
 
-var max_score = 1
+var max_score = 5
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,22 +23,20 @@ func _process(delta):
 
 func _on_Field_goal_left():
 	score_player_two += 1
-	print("goal player two")
-	if score_player_two >= max_score:
-		start_new_round()
+	update_score()
+	start_new_round()
+	
 	
 func _on_Field_goal_right():
 	score_player_one += 1
-	print("goal player one")
-	if score_player_one >= max_score:
-		start_new_round()
+	update_score()
+	start_new_round()
 	
 	
 func start_new_round():
 	$Ball.reset()
-	$Ball.set_start_direction()
-	$StartTimer.start()
 	hud.get_node("CountdownContainer").set_visible(true)
+	$StartTimer.start()
 
 func _on_StartTimer_timeout():
 	hud.get_node("CountdownContainer").set_visible(false)
